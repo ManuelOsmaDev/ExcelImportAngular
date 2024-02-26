@@ -9,9 +9,9 @@ export class ExcelService {
   constructor() { }
 
   importarExcel(excelFile: File) {
-    const formData = new FormData();
+    const formData:FormData = new FormData();
     formData.append('file', excelFile);
-    alert(formData)
+
     // Aquí simularíamos la solicitud HTTP para enviar el archivo
     setTimeout(() => {
       // Simulamos el éxito y mostramos el nombre del archivo en el modal

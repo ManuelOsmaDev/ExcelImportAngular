@@ -1,0 +1,66 @@
+importar(evento: any) {
+    if (this.formEditar.invalid) {
+      Object.entries(this.formEditar.controls).forEach(([controlName, control]) => {
+        control.markAsTouched();
+      });
+      Swal.fire({
+        title: "Campos obligatorios",
+        text: "Debe diligenciar todos los campos obligatorios",
+        icon: 'error',
+        cancelButtonText: 'OK'
+      });
+      return false;
+    }else {
+      this.importando = true;
+      let archivo = (evento.target.files[0]) ? evento.target.files[0] : false;
+      if (!archivo) return false;
+      if (!formatos_excel_validos.includes(archivo.type)) {
+        Swal.fire({
+          title: "Error Archivo!",
+          html: "El formato del archivo seleccionado no es válido. <br /> Los formatos válidos son archivos de Excel",
+          icon: 'error', cancelButtonText: 'OK'
+        });
+        return false;
+      }
+      this.archivoSubir = archivo;
+      let datosLiquidacion = {
+        extracto_id: this.formEditar.get('extracto_id')?.value,
+        hotel_id: this.formEditar.get('hotel_id')?.value,
+        torre_id: this.formEditar.get('torre_id')?.value,
+        anio: this.formEditar.get('anio')?.value,
+        mes: this.formEditar.get('mes')?.value
+      }
+      this.serviciosLiquidaciones.crearLiquidacion(datosLiquidacion, this.archivoSubir)
+        .then(async (resultado: any) => {
+          this.importando = false;
+          this.liquidando = true;
+          this.serviciosLiquidaciones.liquidar(resultado.id).subscribe({
+            next: (respuestaLiquidacion: any) => {
+              console.log("Liquidación: ", respuestaLiquidacion);
+              if (respuestaLiquidacion.status === 200) {
+                this.liquidando = false;
+                let datos = respuestaLiquidacion.body;
+                Swal.fire({
+                  title: "Liquidación cargada exitosamente",
+                  text: "La liquidación fue cargada exitosamente"
+                  icon: 'success', cancelButtonText: 'OK'
+                }).then(() => {
+                  this.router.navigateByUrl("inicio/liquidaciones/ver/"+resultado.id);
+                });
+              }
+              else {
+                this.cargandoInformacion = false;
+                Swal.fire({
+                  title: "Error al realizar la liquidación",
+                  text: respuestaLiquidacion.error,
+                  icon: 'error',
+                  cancelButtonText: 'OK'
+                });
+              }
+            },
+            error: (error) => console.log(error)
+          });
+        })
+      return true;
+    }
+  }
