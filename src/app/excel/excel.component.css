@@ -6,4 +6,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+}
+
+
+.container .input{
+    padding: 20px;
+}
+
+.container .input input{
+    width: 100%;
+    padding: 10px;
+    background: rgb(194, 133, 233);
+    border-radius: 5px;
 }

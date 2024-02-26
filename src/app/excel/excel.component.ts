@@ -28,6 +28,7 @@ export class ExcelComponent {
       console.error('No se seleccionó ningún archivo.');
     }
   }
-  }
+
+}
    
 

@@ -1,8 +1,9 @@
 <div class="container">
-    <div>
-      <label>Seleccionar archivo Excel</label>
-      <input id="inputFile" matInput type="file" (change)="archivoSelecionado($event)">
+    <div class="input">
+      <input id="inputFile" type="file" (change)="archivoSelecionado($event)">
     </div>
   
+   <div>
     <button mat-raised-button matTooltip="Importar excel" (click)="importar()">Importar Excel</button>
+   </div>
 </div>
